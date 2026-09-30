@@ -75,6 +75,7 @@ Tarefas de código seguem a skill `implementar-spec`: primeiro o teste falhando,
 - **Arquivos:** `tests/test_fiado.py`. Templates só se a checagem manual achar problema.
 - **Provas:** `test_dados_persistem_apos_reabrir` (dois `create_app` com o mesmo arquivo de banco); `test_formatar_reais` (0,01 → "R$ 0,01"; 5000 → "R$ 5.000,00"); checagem manual no DevTools a 360 px de largura, registrada no commit.
 - **Commit:** `test(001): cobre restrições da seção 7`.
+- **Checagem manual de 360 px:** feita por Maria Eduarda em 30/09/2026, no DevTools a 360 px de largura, na lista de clientes (`/clientes`) e na tela do cliente (`/clientes/<id>`). Tudo cabe sem cortar e sem rolagem lateral; nenhum template precisou mudar.
 
 ## T11 — Atualizar a spec 001
 - **Atende:** P1, P2 e P3 (Decisões da revisão). Mexe no texto da RN-02, na seção 4 (Dados do Cliente) e na tabela da seção 8.
