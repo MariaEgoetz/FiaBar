@@ -2,7 +2,9 @@ from datetime import UTC, datetime
 
 import pytest
 
+from app import create_app
 from app.db import get_db
+from app.fiado import formatar_reais
 
 
 def criar_cliente_com_saldo(app, nome, centavos):
@@ -234,3 +236,20 @@ def test_rn03_fiado_para_cliente_inexistente_retorna_404(app, client):
 
     assert resposta.status_code == 404
     assert contar_lancamentos(app) == 0
+
+
+def test_dados_persistem_apos_reabrir(tmp_path):
+    config = {"TESTING": True, "DATABASE": str(tmp_path / "persistente.db")}
+    primeiro = create_app(config).test_client()
+    cadastrar_cliente(primeiro, "Maria Silva")
+    registrar_fiado(primeiro, 1, "12,50")
+
+    reaberto = create_app(config).test_client()
+
+    assert "Maria Silva" in reaberto.get("/clientes").get_data(as_text=True)
+    assert "R$ 12,50" in reaberto.get("/clientes/1").get_data(as_text=True)
+
+
+def test_formatar_reais():
+    assert formatar_reais(1) == "R$ 0,01"
+    assert formatar_reais(500000) == "R$ 5.000,00"
