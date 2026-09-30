@@ -14,8 +14,8 @@ Controle de fiado para bares e comércios locais. Projeto da disciplina ESW442 (
 - Ativar (Linux/Mac): `source .venv/bin/activate`
 - Instalar: `pip install -r requirements.txt`
 - Rodar: `flask --app app run`
-- Testar: `pytest`
-- Lint: `ruff check .`
+- Testar: `.venv\Scripts\python -m pytest`
+- Lint: `.venv\Scripts\python -m ruff check .`
 
 ## Estrutura
 - `app/` — código da aplicação Flask
@@ -30,7 +30,7 @@ Toda feature tem spec em `docs/specs/NNN-nome.md`. Critérios de aceite (CA-xx) 
 - Declare suas suposições. Se o pedido admite duas leituras, pergunte antes de escolher uma.
 - O mínimo que resolve. Sem abstração de uso único, sem opção que ninguém pediu, sem tratar erro que não acontece.
 - Toque só no necessário. Mantenha o estilo do arquivo e não refatore código que funciona e não faz parte do pedido.
-- Diga como vai provar que funcionou (`pytest` e `ruff check .`) e rode a prova antes de dizer que terminou.
+- Diga como vai provar que funcionou (`.venv\Scripts\python -m pytest` e `.venv\Scripts\python -m ruff check .`) e rode a prova antes de dizer que terminou.
 
 ## Segurança
 - Nunca leia, edite ou exiba o arquivo `.env`.

@@ -1,8 +1,29 @@
 {
   "permissions": {
+    "allow": [
+      "Bash(.venv/Scripts/python -m pytest:*)",
+      "Bash(.venv/Scripts/python -m ruff check:*)"
+    ],
+    "ask": [
+      "Bash(git push:*)"
+    ],
     "deny": [
       "Read(./.env)",
-      "Edit(./.env)"
+      "Edit(./.env)",
+      "Bash(rm -rf:*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".venv/Scripts/python -m ruff check . 1>&2 || exit 2"
+          }
+        ]
+      }
     ]
   }
 }
