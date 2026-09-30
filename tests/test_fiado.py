@@ -159,3 +159,26 @@ def test_valor_nao_numerico_rejeitado(app, client):
     assert "Informe um valor numérico, ex.: 12,50" in pagina
     assert "R$ 30,00" in pagina
     assert contar_lancamentos(app) == 1
+
+
+def test_ca03_descricao_em_branco_rejeitada(app, client):
+    joao = criar_cliente_com_saldo(app, "João", 3000)
+
+    resposta = registrar_fiado(client, joao, "12,50", descricao="   ")
+
+    pagina = resposta.get_data(as_text=True)
+    assert "Informe o que o cliente levou" in pagina
+    assert "R$ 30,00" in pagina
+    assert contar_lancamentos(app) == 1
+
+
+@pytest.mark.parametrize(("tamanho", "salva"), [(200, True), (201, False)])
+def test_rn06_descricao_acima_de_200_rejeitada(app, client, tamanho, salva):
+    joao = criar_cliente_com_saldo(app, "João", 3000)
+
+    resposta = registrar_fiado(client, joao, "12,50", descricao="a" * tamanho)
+
+    pagina = resposta.get_data(as_text=True)
+    mensagem = "A descrição deve ter no máximo 200 caracteres"
+    assert (mensagem not in pagina) == salva
+    assert contar_lancamentos(app) == (2 if salva else 1)

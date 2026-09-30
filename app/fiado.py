@@ -83,11 +83,18 @@ def registrar_fiado(cliente_id):
         return mostrar_cliente(
             cliente_id, "Informe um valor entre R$ 0,01 e R$ 5.000,00"
         )
+    descricao = request.form["descricao"].strip()
+    if not descricao:
+        return mostrar_cliente(cliente_id, "Informe o que o cliente levou")
+    if len(descricao) > 200:
+        return mostrar_cliente(
+            cliente_id, "A descrição deve ter no máximo 200 caracteres"
+        )
     db = get_db()
     db.execute(
         "INSERT INTO lancamento (cliente_id, descricao, valor_centavos)"
         " VALUES (?, ?, ?)",
-        (cliente_id, request.form["descricao"], int(valor * 100)),
+        (cliente_id, descricao, int(valor * 100)),
     )
     db.commit()
     return redirect(url_for("fiado.ver_cliente", cliente_id=cliente_id))
