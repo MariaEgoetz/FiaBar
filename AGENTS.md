@@ -13,7 +13,7 @@ Controle de fiado para bares e comércios locais. Projeto da disciplina ESW442 (
 - Ativar (Windows): `.venv\Scripts\activate`
 - Ativar (Linux/Mac): `source .venv/bin/activate`
 - Instalar: `pip install -r requirements.txt`
-- Rodar: `flask --app app run`
+- Rodar: `.venv/Scripts/python -m flask --app app run`
 - Testar: `.venv/Scripts/python -m pytest`
 - Lint: `.venv/Scripts/python -m ruff check .`
 
