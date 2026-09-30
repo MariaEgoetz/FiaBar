@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clientes — FiaBar</title>
+</head>
+<body>
+  <h1>Clientes</h1>
+
+  {% if erro %}<p role="alert">{{ erro }}</p>{% endif %}
+
+  <form method="post" action="{{ url_for('fiado.cadastrar_cliente') }}">
+    <label>Nome <input name="nome" required></label>
+    <label>Telefone <input name="telefone" inputmode="tel"></label>
+    <button type="submit">Cadastrar cliente</button>
+  </form>
+
+  <ul>
+    {% for cliente in clientes %}
+    <li><a href="{{ url_for('fiado.ver_cliente', cliente_id=cliente.id) }}">{{ cliente.nome }}</a></li>
+    {% endfor %}
+  </ul>
+</body>
+</html>

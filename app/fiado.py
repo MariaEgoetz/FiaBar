@@ -21,6 +21,35 @@ def buscar_cliente(cliente_id):
     return cliente
 
 
+def listar_clientes(erro=None):
+    clientes = get_db().execute(
+        "SELECT id, nome, telefone FROM cliente ORDER BY nome"
+    ).fetchall()
+    return render_template("clientes.html", clientes=clientes, erro=erro)
+
+
+@bp.get("/clientes")
+def ver_clientes():
+    return listar_clientes()
+
+
+@bp.post("/clientes")
+def cadastrar_cliente():
+    nome = request.form["nome"].strip()
+    telefone = "".join(c for c in request.form["telefone"] if c.isdigit())
+    if not 2 <= len(nome) <= 60:
+        return listar_clientes("O nome deve ter entre 2 e 60 caracteres")
+    if telefone and len(telefone) not in (10, 11):
+        return listar_clientes("Informe um telefone com 10 ou 11 dígitos")
+    db = get_db()
+    db.execute(
+        "INSERT INTO cliente (nome, telefone) VALUES (?, ?)",
+        (nome, telefone or None),
+    )
+    db.commit()
+    return redirect(url_for("fiado.ver_clientes"))
+
+
 @bp.get("/clientes/<int:cliente_id>")
 def ver_cliente(cliente_id):
     cliente = buscar_cliente(cliente_id)
