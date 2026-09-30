@@ -10,7 +10,10 @@
     "deny": [
       "Read(./.env)",
       "Edit(./.env)",
-      "Bash(rm -rf:*)"
+      "Bash(rm -rf:*)",
+      "Bash(cat .env*)",
+      "Bash(type .env*)",
+      "Bash(Get-Content .env*)"
     ]
   },
   "hooks": {
@@ -18,6 +21,20 @@
       {
         "matcher": "Edit|Write",
         "hooks": [
+          {
+            "type": "command",
+            "command": ".venv/Scripts/python -m ruff check . 1>&2 || exit 2"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".venv/Scripts/python -m pytest -q 1>&2 || exit 2"
+          },
           {
             "type": "command",
             "command": ".venv/Scripts/python -m ruff check . 1>&2 || exit 2"
