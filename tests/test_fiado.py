@@ -224,3 +224,13 @@ def test_rn04_data_hora_preenchida_pelo_sistema(app, client):
         ).fetchone()[0]
     diferenca = datetime.now(UTC) - datetime.fromisoformat(criado_em).astimezone()
     assert abs(diferenca.total_seconds()) < 60
+
+
+def test_rn03_fiado_para_cliente_inexistente_retorna_404(app, client):
+    resposta = client.post(
+        "/clientes/999/fiados",
+        data={"descricao": "2 cervejas", "valor": "12,50"},
+    )
+
+    assert resposta.status_code == 404
+    assert contar_lancamentos(app) == 0
