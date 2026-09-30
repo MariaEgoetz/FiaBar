@@ -24,8 +24,8 @@ Permitir que Marli registre cada compra fiado de um cliente e consulte quanto es
 
 ## 4. Dados
 **Cliente**
-- Nome: texto, obrigatório, 2 a 60 caracteres.
-- Telefone: texto, opcional, 10 ou 11 dígitos.
+- Nome: texto, obrigatório, 2 a 60 caracteres. Fora disso, o sistema exibe "O nome deve ter entre 2 e 60 caracteres" (D-07).
+- Telefone: texto, opcional, 10 ou 11 dígitos; pontuação e espaços são ignorados na contagem. Fora disso, o sistema exibe "Informe um telefone com 10 ou 11 dígitos" (D-08).
 
 **Lançamento de fiado**
 - Cliente: referência a um cliente cadastrado.
@@ -37,11 +37,11 @@ Permitir que Marli registre cada compra fiado de um cliente e consulte quanto es
 
 ## 5. Regras de negócio
 - **RN-01:** O sistema aceita valores de R$ 0,01 até R$ 5.000,00, inclusive.
-- **RN-02:** O sistema rejeita valores com mais de duas casas decimais.
+- **RN-02:** O sistema rejeita valores com mais de duas casas decimais, com a mensagem "Use no máximo duas casas decimais" (D-09).
 - **RN-03:** Cada lançamento pertence a exatamente um cliente cadastrado.
 - **RN-04:** O sistema grava data e hora do lançamento no momento em que Marli salva; Marli não altera esses campos.
 - **RN-05:** O saldo devedor de um cliente é igual à soma dos valores dos lançamentos desse cliente.
-- **RN-06:** O sistema rejeita descrição vazia ou com mais de 200 caracteres.
+- **RN-06:** O sistema rejeita descrição vazia ou com mais de 200 caracteres. Acima de 200, a mensagem é "A descrição deve ter no máximo 200 caracteres" (D-10).
 - **RN-07:** O sistema rejeita cadastro de cliente com nome igual ao de um cliente existente, ignorando diferença entre maiúsculas e minúsculas e espaços no início e no fim.
 
 ## 6. Critérios de aceite
@@ -67,8 +67,8 @@ Permitir que Marli registre cada compra fiado de um cliente e consulte quanto es
 | Borda | R$ 5.000,01     | Sistema rejeita com mensagem de faixa |
 | Erro  | R$ 0,00         | Sistema rejeita com mensagem de faixa |
 | Erro  | -R$ 5,00        | Sistema rejeita com mensagem de faixa |
-| Erro  | R$ 12,345       | Sistema rejeita (RN-02) |
-| Erro  | "abc"           | Sistema rejeita e pede um número |
+| Erro  | R$ 12,345       | Sistema rejeita com "Use no máximo duas casas decimais" (RN-02) |
+| Erro  | "abc"           | Sistema rejeita com "Informe um valor numérico, ex.: 12,50" |
 
 ## 9. Decisões
 - **D-01 — Limite de valor:** "valor válido" estava aberto. Decidimos R$ 5.000,00 como teto porque valores acima disso indicam erro de digitação no contexto de um bar; Marli confirmou esse limite.
@@ -77,6 +77,10 @@ Permitir que Marli registre cada compra fiado de um cliente e consulte quanto es
 - **D-04 — Homônimos:** dois clientes com o mesmo nome geravam ambiguidade. Nome único (RN-07); Marli diferencia por complemento, ex.: "João Oficina".
 - **D-05 — Descrição livre em vez de produtos:** catálogo de produtos aumenta o escopo sem resolver a dor principal (perder o registro).
 - **D-06 — Saldo:** "quanto deve" estava vago. Definido como soma dos lançamentos (RN-05), já que pagamentos estão fora do escopo.
+- **D-07 — Mensagem do nome:** a spec não dizia o que exibir para nome fora de 2 a 60 caracteres. Decidido na revisão do plano (P1): "O nome deve ter entre 2 e 60 caracteres".
+- **D-08 — Telefone com pontuação:** a spec não dizia se "(64) 99999-9999" era válido. Decidido na revisão do plano (P2): pontuação e espaços são ignorados, então esse exemplo conta como 11 dígitos. Fora de 10 ou 11 dígitos, o sistema exibe "Informe um telefone com 10 ou 11 dígitos".
+- **D-09 — Mensagens do formato do valor:** a tabela da seção 8 não trazia o texto das mensagens. Decidido na revisão do plano (P3): mais de duas casas exibe "Use no máximo duas casas decimais"; valor não numérico exibe "Informe um valor numérico, ex.: 12,50".
+- **D-10 — Mensagem da descrição longa:** a RN-06 não dizia o que exibir para descrição acima de 200 caracteres. Decidido durante a implementação do T7: "A descrição deve ter no máximo 200 caracteres".
 
 **Se o código fosse apagado agora, esta spec seria suficiente para reconstruí-lo?**
 Sim para cadastro de cliente, registro de fiado, saldo e histórico. Não define o layout das telas, que fica a critério da equipe.
