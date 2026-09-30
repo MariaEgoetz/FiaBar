@@ -1,7 +1,7 @@
 # Spec 001 — Registrar compra fiado
 
 ## 1. Objetivo
-Permitir que Marli registre cada compra fiado de um cliente e consulte, a qualquer momento, quanto esse cliente deve, substituindo as anotações em papel.
+Permitir que Marli registre cada compra fiado de um cliente e consulte quanto esse cliente deve, substituindo as anotações em papel.
 
 ## 2. Escopo
 **Entra:**
@@ -31,9 +31,9 @@ Permitir que Marli registre cada compra fiado de um cliente e consulte, a qualqu
 - Cliente: referência a um cliente cadastrado.
 - Descrição: texto, obrigatório, 1 a 200 caracteres (ex.: "2 cervejas e 1 porção").
 - Valor: em reais, com duas casas decimais.
-- Data e hora: preenchidas pelo sistema no momento do registro.
+- Data e hora: o sistema preenche no momento do registro.
 
-**Saldo devedor:** valor calculado; não é digitado.
+**Saldo devedor:** o sistema calcula; Marli não digita esse valor.
 
 ## 5. Regras de negócio
 - **RN-01:** O sistema aceita valores de R$ 0,01 até R$ 5.000,00, inclusive.
@@ -71,7 +71,7 @@ Permitir que Marli registre cada compra fiado de um cliente e consulte, a qualqu
 | Erro  | "abc"           | Sistema rejeita e pede um número |
 
 ## 9. Decisões
-- **D-01 — Limite de valor:** "valor válido" estava aberto. Decidimos R$ 5.000,00 como teto porque valores acima disso indicam erro de digitação no contexto de um bar. Confirmar com Marli.
+- **D-01 — Limite de valor:** "valor válido" estava aberto. Decidimos R$ 5.000,00 como teto porque valores acima disso indicam erro de digitação no contexto de um bar; Marli confirmou esse limite.
 - **D-02 — Data e hora automáticas:** a spec não dizia quem informa a data. O sistema grava sozinho para impedir datas erradas e dar prova em caso de contestação do cliente.
 - **D-03 — Sem edição e sem exclusão:** permitir apagar lançamentos enfraquece o histórico como prova. Correções ficam para uma spec futura (lançamento de estorno).
 - **D-04 — Homônimos:** dois clientes com o mesmo nome geravam ambiguidade. Nome único (RN-07); Marli diferencia por complemento, ex.: "João Oficina".
