@@ -1,3 +1,5 @@
+from datetime import UTC, datetime
+
 import pytest
 
 from app.db import get_db
@@ -182,3 +184,43 @@ def test_rn06_descricao_acima_de_200_rejeitada(app, client, tamanho, salva):
     mensagem = "A descrição deve ter no máximo 200 caracteres"
     assert (mensagem not in pagina) == salva
     assert contar_lancamentos(app) == (2 if salva else 1)
+
+
+def test_ca05_historico_mostra_data_hora_descricao_valor(app, client):
+    with app.app_context():
+        db = get_db()
+        joao = db.execute("INSERT INTO cliente (nome) VALUES ('João')").lastrowid
+        db.execute(
+            "INSERT INTO lancamento"
+            " (cliente_id, descricao, valor_centavos, criado_em)"
+            " VALUES (?, '1 refrigerante', 800, '2026-10-02 19:40:00')",
+            (joao,),
+        )
+        db.commit()
+
+    pagina = client.get(f"/clientes/{joao}").get_data(as_text=True)
+
+    assert "02/10/2026" in pagina
+    assert "19:40" in pagina
+    assert "1 refrigerante" in pagina
+    assert "R$ 8,00" in pagina
+
+
+def test_rn04_data_hora_preenchida_pelo_sistema(app, client):
+    joao = criar_cliente_com_saldo(app, "João", 3000)
+
+    client.post(
+        f"/clientes/{joao}/fiados",
+        data={
+            "descricao": "1 refrigerante",
+            "valor": "8,00",
+            "criado_em": "2020-01-01 00:00:00",
+        },
+    )
+
+    with app.app_context():
+        criado_em = get_db().execute(
+            "SELECT criado_em FROM lancamento WHERE descricao = '1 refrigerante'"
+        ).fetchone()[0]
+    diferenca = datetime.now(UTC) - datetime.fromisoformat(criado_em).astimezone()
+    assert abs(diferenca.total_seconds()) < 60

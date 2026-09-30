@@ -1,3 +1,4 @@
+from datetime import datetime
 from decimal import Decimal, InvalidOperation
 
 from flask import Blueprint, abort, redirect, render_template, request, url_for
@@ -60,8 +61,26 @@ def mostrar_cliente(cliente_id, erro=None):
         " WHERE cliente_id = ?",
         (cliente_id,),
     ).fetchone()[0]
+    lancamentos = get_db().execute(
+        "SELECT descricao, valor_centavos, criado_em FROM lancamento"
+        " WHERE cliente_id = ? ORDER BY criado_em DESC, id DESC",
+        (cliente_id,),
+    ).fetchall()
+    historico = [
+        {
+            "data": datetime.fromisoformat(item["criado_em"]).strftime("%d/%m/%Y"),
+            "hora": datetime.fromisoformat(item["criado_em"]).strftime("%H:%M"),
+            "descricao": item["descricao"],
+            "valor": formatar_reais(item["valor_centavos"]),
+        }
+        for item in lancamentos
+    ]
     return render_template(
-        "cliente.html", cliente=cliente, saldo=formatar_reais(saldo), erro=erro
+        "cliente.html",
+        cliente=cliente,
+        saldo=formatar_reais(saldo),
+        historico=historico,
+        erro=erro,
     )
 
 

@@ -16,5 +16,12 @@
     <label>Valor (R$) <input name="valor" inputmode="decimal" required></label>
     <button type="submit">Registrar fiado</button>
   </form>
+
+  <h2>Histórico</h2>
+  <ul>
+    {% for item in historico %}
+    <li>{{ item.data }} {{ item.hora }} — {{ item.descricao }} — {{ item.valor }}</li>
+    {% endfor %}
+  </ul>
 </body>
 </html>
