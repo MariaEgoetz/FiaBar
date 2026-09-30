@@ -42,6 +42,9 @@ def cadastrar_cliente():
     if telefone and len(telefone) not in (10, 11):
         return listar_clientes("Informe um telefone com 10 ou 11 dígitos")
     db = get_db()
+    existentes = db.execute("SELECT nome FROM cliente").fetchall()
+    if any(c["nome"].strip().lower() == nome.lower() for c in existentes):
+        return listar_clientes("Já existe um cliente com esse nome")
     db.execute(
         "INSERT INTO cliente (nome, telefone) VALUES (?, ?)",
         (nome, telefone or None),

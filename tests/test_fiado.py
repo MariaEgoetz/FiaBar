@@ -82,3 +82,13 @@ def test_telefone_vazio_aceito(client):
     cadastrar_cliente(client, "Maria Silva")
 
     assert "Maria Silva" in client.get("/clientes").get_data(as_text=True)
+
+
+def test_ca04_nome_duplicado_rejeitado(client):
+    cadastrar_cliente(client, "Maria Silva")
+
+    resposta = cadastrar_cliente(client, " maria silva ")
+
+    assert "Já existe um cliente com esse nome" in resposta.get_data(as_text=True)
+    lista = client.get("/clientes").get_data(as_text=True)
+    assert lista.lower().count("maria silva") == 1
