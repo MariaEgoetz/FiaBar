@@ -27,10 +27,10 @@ Controle de fiado para bares e comércios locais. Projeto da disciplina ESW442 (
 Toda feature tem spec em `docs/specs/NNN-nome.md`. Critérios de aceite (CA-xx) e regras (RN-xx) da spec valem mais que qualquer suposição. Se algo não estiver na spec, pergunte antes de implementar.
 
 ## Como você deve trabalhar
-1. **Pense antes de codar:** leia a spec, diga o que entendeu e aponte dúvidas antes de escrever código.
-2. **Simplicidade primeiro:** escreva o mínimo que atende ao critério de aceite. Nada de funções fora do escopo da spec.
-3. **Mudanças cirúrgicas:** altere só os arquivos necessários para a tarefa. Não reformate nem refatore código não relacionado.
-4. **Guiado por verificação:** só considere uma tarefa pronta depois que `pytest` e `ruff check .` passarem, e mostre a saída.
+- Declare suas suposições. Se o pedido admite duas leituras, pergunte antes de escolher uma.
+- O mínimo que resolve. Sem abstração de uso único, sem opção que ninguém pediu, sem tratar erro que não acontece.
+- Toque só no necessário. Mantenha o estilo do arquivo e não refatore código que funciona e não faz parte do pedido.
+- Diga como vai provar que funcionou (`pytest` e `ruff check .`) e rode a prova antes de dizer que terminou.
 
 ## Segurança
 - Nunca leia, edite ou exiba o arquivo `.env`.
