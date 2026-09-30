@@ -9,6 +9,8 @@
   <h1>{{ cliente.nome }}</h1>
   <p>Saldo devedor: <strong>{{ saldo }}</strong></p>
 
+  {% if erro %}<p role="alert">{{ erro }}</p>{% endif %}
+
   <form method="post" action="{{ url_for('fiado.registrar_fiado', cliente_id=cliente.id) }}">
     <label>O que levou <input name="descricao" required></label>
     <label>Valor (R$) <input name="valor" inputmode="decimal" required></label>

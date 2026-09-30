@@ -53,8 +53,7 @@ def cadastrar_cliente():
     return redirect(url_for("fiado.ver_clientes"))
 
 
-@bp.get("/clientes/<int:cliente_id>")
-def ver_cliente(cliente_id):
+def mostrar_cliente(cliente_id, erro=None):
     cliente = buscar_cliente(cliente_id)
     saldo = get_db().execute(
         "SELECT COALESCE(SUM(valor_centavos), 0) FROM lancamento"
@@ -62,14 +61,23 @@ def ver_cliente(cliente_id):
         (cliente_id,),
     ).fetchone()[0]
     return render_template(
-        "cliente.html", cliente=cliente, saldo=formatar_reais(saldo)
+        "cliente.html", cliente=cliente, saldo=formatar_reais(saldo), erro=erro
     )
+
+
+@bp.get("/clientes/<int:cliente_id>")
+def ver_cliente(cliente_id):
+    return mostrar_cliente(cliente_id)
 
 
 @bp.post("/clientes/<int:cliente_id>/fiados")
 def registrar_fiado(cliente_id):
     buscar_cliente(cliente_id)
     valor = Decimal(request.form["valor"].replace(".", "").replace(",", "."))
+    if not Decimal("0.01") <= valor <= Decimal("5000.00"):
+        return mostrar_cliente(
+            cliente_id, "Informe um valor entre R$ 0,01 e R$ 5.000,00"
+        )
     db = get_db()
     db.execute(
         "INSERT INTO lancamento (cliente_id, descricao, valor_centavos)"

@@ -92,3 +92,48 @@ def test_ca04_nome_duplicado_rejeitado(client):
     assert "Já existe um cliente com esse nome" in resposta.get_data(as_text=True)
     lista = client.get("/clientes").get_data(as_text=True)
     assert lista.lower().count("maria silva") == 1
+
+
+def contar_lancamentos(app):
+    with app.app_context():
+        return get_db().execute("SELECT COUNT(*) FROM lancamento").fetchone()[0]
+
+
+def registrar_fiado(client, cliente_id, valor, descricao="2 cervejas"):
+    return client.post(
+        f"/clientes/{cliente_id}/fiados",
+        data={"descricao": descricao, "valor": valor},
+        follow_redirects=True,
+    )
+
+
+def test_ca02_valor_zero_rejeitado(app, client):
+    joao = criar_cliente_com_saldo(app, "João", 3000)
+
+    resposta = registrar_fiado(client, joao, "0,00")
+
+    pagina = resposta.get_data(as_text=True)
+    assert "Informe um valor entre R$ 0,01 e R$ 5.000,00" in pagina
+    assert "R$ 30,00" in pagina
+    assert contar_lancamentos(app) == 1
+
+
+@pytest.mark.parametrize(
+    ("valor", "salva"),
+    [
+        ("0,01", True),
+        ("5.000,00", True),
+        ("5.000,01", False),
+        ("0,00", False),
+        ("-5,00", False),
+    ],
+)
+def test_rn01_faixa_de_valor(app, client, valor, salva):
+    joao = criar_cliente_com_saldo(app, "João", 3000)
+
+    resposta = registrar_fiado(client, joao, valor)
+
+    pagina = resposta.get_data(as_text=True)
+    mensagem = "Informe um valor entre R$ 0,01 e R$ 5.000,00"
+    assert (mensagem not in pagina) == salva
+    assert contar_lancamentos(app) == (2 if salva else 1)
