@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ cliente.nome }} — FiaBar</title>
+</head>
+<body>
+  <h1>{{ cliente.nome }}</h1>
+  <p>Saldo devedor: <strong>{{ saldo }}</strong></p>
+
+  <form method="post" action="{{ url_for('fiado.registrar_fiado', cliente_id=cliente.id) }}">
+    <label>O que levou <input name="descricao" required></label>
+    <label>Valor (R$) <input name="valor" inputmode="decimal" required></label>
+    <button type="submit">Registrar fiado</button>
+  </form>
+</body>
+</html>
