@@ -29,8 +29,8 @@ A skill acionou na primeira tentativa; a descrição não precisou ser reescrita
 
 Pedido: adicionar `import os` sem uso em `app/fiado.py`.
 
-> PostToolUse:Edit hook returned blocking error
-> [.venv/Scripts/python -m ruff check . 1>&2 || exit 2]: F401 [*] `os` imported but unused --> app\fiado.py:1:8
+> PostToolUse:Edit hook blocking error from command: ".venv/Scripts/python -m ruff check . 1>&2 || exit 2": [.venv/Scripts/python -m ruff check . 1>&2 || exit 2]: F401 [*] `os` imported but unused
+> --> app\fiado.py:1:8
 > Found 1 error.
 
 O agente leu o erro e removeu a linha na edição seguinte; o hook não reclamou mais.
@@ -49,4 +49,4 @@ Observação: as 10 MCP tools listadas vêm das conexões da conta Claude da usu
 
 **O que não mudou, apesar de termos mexido — Execução controlada.** Colocamos o `.env` no deny, e a ferramenta Read foi de fato bloqueada. Mesmo assim, o 2º relatório mantém um achado médio sobre o `.env`: o deny cobre Read e Edit, mas não um `cat .env` pelo terminal. O mesmo vale para o hook: ele existe, mas não rodou quando o agente criou os arquivos do CA-01 pelo Bash, só quando usou Edit. Existir não é o mesmo que ser usado.
 
-**O que ficou como não observado.** No 1º relatório, nenhuma sessão do Claude Code caiu na janela analisada, então o comportamento do agente não foi observado. Isso era ausência de fato: ainda não tínhamos usado o agente no projeto. No 2º, a proteção de branch da `main` no GitHub e a ausência de CI ficaram como não observadas. Aqui é limite da ferramenta: ela lê o repositório local e não tem acesso às configurações do GitHub.
+**O que ficou como não observado.** No 1º relatório, nenhuma sessão do Claude Code caiu na janela analisada, então o comportamento do agente não foi observado. Isso era ausência de fato: ainda não tínhamos usado o agente no projeto. No 2º, a proteção de branch da `main` no GitHub ficou como não observada. Aqui é limite da ferramenta: ela lê o repositório local e não tem acesso às configurações do GitHub.
