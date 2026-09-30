@@ -137,3 +137,25 @@ def test_rn01_faixa_de_valor(app, client, valor, salva):
     mensagem = "Informe um valor entre R$ 0,01 e R$ 5.000,00"
     assert (mensagem not in pagina) == salva
     assert contar_lancamentos(app) == (2 if salva else 1)
+
+
+def test_rn02_mais_de_duas_casas_rejeitado(app, client):
+    joao = criar_cliente_com_saldo(app, "João", 3000)
+
+    resposta = registrar_fiado(client, joao, "12,345")
+
+    pagina = resposta.get_data(as_text=True)
+    assert "Use no máximo duas casas decimais" in pagina
+    assert "R$ 30,00" in pagina
+    assert contar_lancamentos(app) == 1
+
+
+def test_valor_nao_numerico_rejeitado(app, client):
+    joao = criar_cliente_com_saldo(app, "João", 3000)
+
+    resposta = registrar_fiado(client, joao, "abc")
+
+    pagina = resposta.get_data(as_text=True)
+    assert "Informe um valor numérico, ex.: 12,50" in pagina
+    assert "R$ 30,00" in pagina
+    assert contar_lancamentos(app) == 1
