@@ -29,6 +29,11 @@ def listar_clientes(erro=None):
     return render_template("clientes.html", clientes=clientes, erro=erro)
 
 
+@bp.get("/")
+def inicio():
+    return redirect(url_for("fiado.ver_clientes"))
+
+
 @bp.get("/clientes")
 def ver_clientes():
     return listar_clientes()

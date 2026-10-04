@@ -253,3 +253,10 @@ def test_dados_persistem_apos_reabrir(tmp_path):
 def test_formatar_reais():
     assert formatar_reais(1) == "R$ 0,01"
     assert formatar_reais(500000) == "R$ 5.000,00"
+
+
+def test_rota_inicial_redireciona_para_lista_de_clientes(client):
+    resposta = client.get("/")
+
+    assert resposta.status_code == 302
+    assert resposta.headers["Location"] == "/clientes"
