@@ -22,3 +22,8 @@ Já aplicamos o hook Stop e o deny pelo terminal: https://github.com/MariaEgoetz
 CA-01 a CA-05 e RN-01 a RN-07 cobertos por 25 testes passando. A checagem de 360 px foi manual, na lista de clientes e na tela do cliente. O CA-01 foi implementado antes do plano, durante o teste do harness, e está registrado como T0. Nenhum teste foi apagado ou afrouxado.
 
 Observação de uso: a tela do cliente não tem link de volta para a lista. A spec não pede, então não é falha, mas entra como candidata a uma próxima spec.
+
+## Teste do clone limpo
+Enildo Martins de Oliveira Filho clonou o repositório e seguiu só o AGENTS.md, sem travar em nenhum comando. Os 25 testes do projeto passaram. Ele encontrou dois problemas:
+- A página inicial dava 404: faltava a rota `/` e o AGENTS.md não dizia qual URL abrir. Corrigido em https://github.com/MariaEgoetz/FiaBar/commit/e7cd604426e117a594e33851113b5761fddf3112
+- O pytest coletava testes de dependências, de dentro de `Lib/site-packages`. Corrigido em https://github.com/MariaEgoetz/FiaBar/commit/a4a21e7126410818c6c1079414b55bcbd34896f5
