@@ -19,7 +19,7 @@ No T7, a spec e o plano não diziam qual mensagem exibir para descrição acima 
 Já aplicamos o hook Stop e o deny pelo terminal: https://github.com/MariaEgoetz/FiaBar/commit/a9f71ceb9ff9ebd95a2f18704228203596aef358
 
 ## Critérios atendidos
-CA-01 a CA-05 e RN-01 a RN-07 cobertos por 25 testes passando. A checagem de 360 px foi manual, na lista de clientes e na tela do cliente. O CA-01 foi implementado antes do plano, durante o teste do harness, e está registrado como T0. Nenhum teste foi apagado ou afrouxado.
+CA-01 a CA-05 e RN-01 a RN-07 cobertos por 26 testes passando. A checagem de 360 px foi manual, na lista de clientes e na tela do cliente. O CA-01 foi implementado antes do plano, durante o teste do harness, e está registrado como T0. Nenhum teste foi apagado ou afrouxado.
 
 Observação de uso: a tela do cliente não tem link de volta para a lista. A spec não pede, então não é falha, mas entra como candidata a uma próxima spec.
 
