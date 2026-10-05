@@ -81,6 +81,7 @@ Permitir que Marli registre cada compra fiado de um cliente e consulte quanto es
 - **D-08 — Telefone com pontuação:** a spec não dizia se "(64) 99999-9999" era válido. Decidido na revisão do plano (P2): pontuação e espaços são ignorados, então esse exemplo conta como 11 dígitos. Fora de 10 ou 11 dígitos, o sistema exibe "Informe um telefone com 10 ou 11 dígitos".
 - **D-09 — Mensagens do formato do valor:** a tabela da seção 8 não trazia o texto das mensagens. Decidido na revisão do plano (P3): mais de duas casas exibe "Use no máximo duas casas decimais"; valor não numérico exibe "Informe um valor numérico, ex.: 12,50".
 - **D-10 — Mensagem da descrição longa:** a RN-06 não dizia o que exibir para descrição acima de 200 caracteres. Decidido durante a implementação do T7: "A descrição deve ter no máximo 200 caracteres".
+- **D-11 — Rota inicial:** a spec não dizia o que abrir em `/`, e o teste do clone limpo encontrou 404 na página inicial. Decidido após esse teste: a rota `/` redireciona para a lista de clientes.
 
 **Se o código fosse apagado agora, esta spec seria suficiente para reconstruí-lo?**
 Sim para cadastro de cliente, registro de fiado, saldo e histórico. Não define o layout das telas, que fica a critério da equipe.
