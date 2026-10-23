@@ -121,3 +121,23 @@ def test_ca04_pagamento_negativo_rejeitado(app, client):
     html = resposta.get_data(as_text=True)
     assert "Informe um valor maior que zero" in html
     assert "Saldo devedor: <strong>R$ 42,50</strong>" in html
+
+
+def test_ca05_historico_mostra_pagamento(app, client):
+    joao = criar_cliente_com_saldo(app, "João", 4250)
+    with app.app_context():
+        db = get_db()
+        db.execute(
+            "INSERT INTO pagamento (cliente_id, valor_centavos, criado_em)"
+            " VALUES (?, 2000, '2026-10-24 10:15:00')",
+            (joao,),
+        )
+        db.commit()
+
+    pagina = client.get(f"/clientes/{joao}").get_data(as_text=True)
+
+    linhas = [linha for linha in pagina.splitlines() if "Pagamento" in linha]
+    assert any(
+        "24/10/2026" in linha and "10:15" in linha and "R$ 20,00" in linha
+        for linha in linhas
+    )
