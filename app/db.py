@@ -15,6 +15,12 @@ CREATE TABLE IF NOT EXISTS lancamento (
     valor_centavos INTEGER NOT NULL,
     criado_em TEXT NOT NULL DEFAULT (datetime('now', 'localtime'))
 );
+CREATE TABLE IF NOT EXISTS pagamento (
+    id INTEGER PRIMARY KEY,
+    cliente_id INTEGER NOT NULL REFERENCES cliente (id),
+    valor_centavos INTEGER NOT NULL,
+    criado_em TEXT NOT NULL DEFAULT (datetime('now', 'localtime'))
+);
 """
 
 

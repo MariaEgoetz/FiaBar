@@ -62,9 +62,12 @@ def cadastrar_cliente():
 def mostrar_cliente(cliente_id, erro=None):
     cliente = buscar_cliente(cliente_id)
     saldo = get_db().execute(
-        "SELECT COALESCE(SUM(valor_centavos), 0) FROM lancamento"
-        " WHERE cliente_id = ?",
-        (cliente_id,),
+        "SELECT"
+        " (SELECT COALESCE(SUM(valor_centavos), 0) FROM lancamento"
+        "  WHERE cliente_id = ?)"
+        " - (SELECT COALESCE(SUM(valor_centavos), 0) FROM pagamento"
+        "  WHERE cliente_id = ?)",
+        (cliente_id, cliente_id),
     ).fetchone()[0]
     lancamentos = get_db().execute(
         "SELECT descricao, valor_centavos, criado_em FROM lancamento"
@@ -119,6 +122,19 @@ def registrar_fiado(cliente_id):
         "INSERT INTO lancamento (cliente_id, descricao, valor_centavos)"
         " VALUES (?, ?, ?)",
         (cliente_id, descricao, int(valor * 100)),
+    )
+    db.commit()
+    return redirect(url_for("fiado.ver_cliente", cliente_id=cliente_id))
+
+
+@bp.post("/clientes/<int:cliente_id>/pagamentos")
+def registrar_pagamento(cliente_id):
+    buscar_cliente(cliente_id)
+    valor = Decimal(request.form["valor"].replace(".", "").replace(",", "."))
+    db = get_db()
+    db.execute(
+        "INSERT INTO pagamento (cliente_id, valor_centavos) VALUES (?, ?)",
+        (cliente_id, int(valor * 100)),
     )
     db.commit()
     return redirect(url_for("fiado.ver_cliente", cliente_id=cliente_id))
