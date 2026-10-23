@@ -59,9 +59,8 @@ def cadastrar_cliente():
     return redirect(url_for("fiado.ver_clientes"))
 
 
-def mostrar_cliente(cliente_id, erro=None):
-    cliente = buscar_cliente(cliente_id)
-    saldo = get_db().execute(
+def calcular_saldo(cliente_id):
+    return get_db().execute(
         "SELECT"
         " (SELECT COALESCE(SUM(valor_centavos), 0) FROM lancamento"
         "  WHERE cliente_id = ?)"
@@ -69,6 +68,11 @@ def mostrar_cliente(cliente_id, erro=None):
         "  WHERE cliente_id = ?)",
         (cliente_id, cliente_id),
     ).fetchone()[0]
+
+
+def mostrar_cliente(cliente_id, erro=None):
+    cliente = buscar_cliente(cliente_id)
+    saldo = calcular_saldo(cliente_id)
     lancamentos = get_db().execute(
         "SELECT descricao, valor_centavos, criado_em FROM lancamento"
         " WHERE cliente_id = ? ORDER BY criado_em DESC, id DESC",
@@ -138,6 +142,10 @@ def registrar_pagamento(cliente_id):
         return mostrar_cliente(cliente_id, "Use no máximo duas casas decimais")
     if valor <= 0:
         return mostrar_cliente(cliente_id, "Informe um valor maior que zero")
+    if int(valor * 100) > calcular_saldo(cliente_id):
+        return mostrar_cliente(
+            cliente_id, "O pagamento não pode ser maior que o saldo devedor"
+        )
     db = get_db()
     db.execute(
         "INSERT INTO pagamento (cliente_id, valor_centavos) VALUES (?, ?)",
