@@ -41,3 +41,13 @@ def test_ca02_pagamento_total_zera_saldo(app, client):
 
     assert resposta.status_code == 200
     assert "R$ 0,00" in resposta.get_data(as_text=True)
+
+
+def test_ca06_tela_exibe_formulario_de_pagamento(app, client):
+    joao = criar_cliente_com_saldo(app, "João", 4250)
+
+    html = client.get(f"/clientes/{joao}").get_data(as_text=True)
+
+    assert f'action="/clientes/{joao}/pagamentos"' in html
+    assert "Valor" in html
+    assert "Registrar pagamento" in html
