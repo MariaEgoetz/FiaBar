@@ -17,6 +17,11 @@
     <button type="submit">Registrar fiado</button>
   </form>
 
+  <form method="post" action="{{ url_for('fiado.registrar_pagamento', cliente_id=cliente.id) }}">
+    <label>Valor (R$) <input name="valor" inputmode="decimal" required></label>
+    <button type="submit">Registrar pagamento</button>
+  </form>
+
   <h2>Histórico</h2>
   <ul>
     {% for item in historico %}
