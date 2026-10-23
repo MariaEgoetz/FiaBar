@@ -69,3 +69,5 @@ Permitir que Marli registre quando um cliente paga todo ou parte do fiado, abate
 
 **Se o código fosse apagado agora, esta spec seria suficiente para reconstruí-lo?**
 Sim para registro de pagamento, saldo e histórico. Não define o layout das telas, que fica a critério da equipe.
+
+Declaração de atualização: a implementação não mudou comportamento além do registrado em D-06 (CA-02 coberto pelo CA-01) e no CA-06 (formulário de pagamento).
