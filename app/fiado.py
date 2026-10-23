@@ -105,15 +105,22 @@ def ver_cliente(cliente_id):
     return mostrar_cliente(cliente_id)
 
 
-@bp.post("/clientes/<int:cliente_id>/fiados")
-def registrar_fiado(cliente_id):
-    buscar_cliente(cliente_id)
+def ler_valor():
     try:
         valor = Decimal(request.form["valor"].replace(".", "").replace(",", "."))
     except InvalidOperation:
-        return mostrar_cliente(cliente_id, "Informe um valor numérico, ex.: 12,50")
+        return None, "Informe um valor numérico, ex.: 12,50"
     if valor.as_tuple().exponent < -2:
-        return mostrar_cliente(cliente_id, "Use no máximo duas casas decimais")
+        return None, "Use no máximo duas casas decimais"
+    return valor, None
+
+
+@bp.post("/clientes/<int:cliente_id>/fiados")
+def registrar_fiado(cliente_id):
+    buscar_cliente(cliente_id)
+    valor, erro = ler_valor()
+    if erro:
+        return mostrar_cliente(cliente_id, erro)
     if not Decimal("0.01") <= valor <= Decimal("5000.00"):
         return mostrar_cliente(
             cliente_id, "Informe um valor entre R$ 0,01 e R$ 5.000,00"
@@ -138,12 +145,9 @@ def registrar_fiado(cliente_id):
 @bp.post("/clientes/<int:cliente_id>/pagamentos")
 def registrar_pagamento(cliente_id):
     buscar_cliente(cliente_id)
-    try:
-        valor = Decimal(request.form["valor"].replace(".", "").replace(",", "."))
-    except InvalidOperation:
-        return mostrar_cliente(cliente_id, "Informe um valor numérico, ex.: 12,50")
-    if valor.as_tuple().exponent < -2:
-        return mostrar_cliente(cliente_id, "Use no máximo duas casas decimais")
+    valor, erro = ler_valor()
+    if erro:
+        return mostrar_cliente(cliente_id, erro)
     if valor <= 0:
         return mostrar_cliente(cliente_id, "Informe um valor maior que zero")
     if int(valor * 100) > calcular_saldo(cliente_id):
