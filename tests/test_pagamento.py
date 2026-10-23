@@ -65,3 +65,31 @@ def test_ca04_pagamento_zero_rejeitado(app, client):
     html = resposta.get_data(as_text=True)
     assert "Informe um valor maior que zero" in html
     assert "Saldo devedor: <strong>R$ 42,50</strong>" in html
+
+
+def test_rn03_pagamento_com_mais_de_duas_casas_rejeitado(app, client):
+    joao = criar_cliente_com_saldo(app, "João", 4250)
+
+    resposta = client.post(
+        f"/clientes/{joao}/pagamentos",
+        data={"valor": "12,345"},
+        follow_redirects=True,
+    )
+
+    html = resposta.get_data(as_text=True)
+    assert "Use no máximo duas casas decimais" in html
+    assert "Saldo devedor: <strong>R$ 42,50</strong>" in html
+
+
+def test_rn03_pagamento_nao_numerico_rejeitado(app, client):
+    joao = criar_cliente_com_saldo(app, "João", 4250)
+
+    resposta = client.post(
+        f"/clientes/{joao}/pagamentos",
+        data={"valor": "abc"},
+        follow_redirects=True,
+    )
+
+    html = resposta.get_data(as_text=True)
+    assert "Informe um valor numérico, ex.: 12,50" in html
+    assert "Saldo devedor: <strong>R$ 42,50</strong>" in html
