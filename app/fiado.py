@@ -74,9 +74,13 @@ def mostrar_cliente(cliente_id, erro=None):
     cliente = buscar_cliente(cliente_id)
     saldo = calcular_saldo(cliente_id)
     lancamentos = get_db().execute(
-        "SELECT descricao, valor_centavos, criado_em FROM lancamento"
-        " WHERE cliente_id = ? ORDER BY criado_em DESC, id DESC",
-        (cliente_id,),
+        "SELECT descricao, valor_centavos, criado_em, id FROM lancamento"
+        " WHERE cliente_id = ?"
+        " UNION ALL"
+        " SELECT 'Pagamento', valor_centavos, criado_em, id FROM pagamento"
+        " WHERE cliente_id = ?"
+        " ORDER BY criado_em DESC, id DESC",
+        (cliente_id, cliente_id),
     ).fetchall()
     historico = [
         {
