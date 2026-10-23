@@ -82,6 +82,7 @@ Permitir que Marli registre cada compra fiado de um cliente e consulte quanto es
 - **D-09 — Mensagens do formato do valor:** a tabela da seção 8 não trazia o texto das mensagens. Decidido na revisão do plano (P3): mais de duas casas exibe "Use no máximo duas casas decimais"; valor não numérico exibe "Informe um valor numérico, ex.: 12,50".
 - **D-10 — Mensagem da descrição longa:** a RN-06 não dizia o que exibir para descrição acima de 200 caracteres. Decidido durante a implementação do T7: "A descrição deve ter no máximo 200 caracteres".
 - **D-11 — Rota inicial:** a spec não dizia o que abrir em `/`, e o teste do clone limpo encontrou 404 na página inicial. Decidido após esse teste: a rota `/` redireciona para a lista de clientes.
+- **D-12 — Saldo redefinido:** A RN-05 (saldo) foi redefinida pela spec 002: saldo = compras − pagamentos.
 
 **Se o código fosse apagado agora, esta spec seria suficiente para reconstruí-lo?**
 Sim para cadastro de cliente, registro de fiado, saldo e histórico. Não define o layout das telas, que fica a critério da equipe.
