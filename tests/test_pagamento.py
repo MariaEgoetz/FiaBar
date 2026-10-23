@@ -51,3 +51,17 @@ def test_ca06_tela_exibe_formulario_de_pagamento(app, client):
     assert f'action="/clientes/{joao}/pagamentos"' in html
     assert "Valor" in html
     assert "Registrar pagamento" in html
+
+
+def test_ca04_pagamento_zero_rejeitado(app, client):
+    joao = criar_cliente_com_saldo(app, "João", 4250)
+
+    resposta = client.post(
+        f"/clientes/{joao}/pagamentos",
+        data={"valor": "0,00"},
+        follow_redirects=True,
+    )
+
+    html = resposta.get_data(as_text=True)
+    assert "Informe um valor maior que zero" in html
+    assert "Saldo devedor: <strong>R$ 42,50</strong>" in html
