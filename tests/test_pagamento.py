@@ -28,3 +28,16 @@ def test_ca01_pagamento_parcial_abate_saldo(app, client):
 
     assert resposta.status_code == 200
     assert "R$ 22,50" in resposta.get_data(as_text=True)
+
+
+def test_ca02_pagamento_total_zera_saldo(app, client):
+    joao = criar_cliente_com_saldo(app, "João", 4250)
+
+    resposta = client.post(
+        f"/clientes/{joao}/pagamentos",
+        data={"valor": "42,50"},
+        follow_redirects=True,
+    )
+
+    assert resposta.status_code == 200
+    assert "R$ 0,00" in resposta.get_data(as_text=True)
