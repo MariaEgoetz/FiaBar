@@ -131,6 +131,8 @@ def registrar_fiado(cliente_id):
 def registrar_pagamento(cliente_id):
     buscar_cliente(cliente_id)
     valor = Decimal(request.form["valor"].replace(".", "").replace(",", "."))
+    if valor <= 0:
+        return mostrar_cliente(cliente_id, "Informe um valor maior que zero")
     db = get_db()
     db.execute(
         "INSERT INTO pagamento (cliente_id, valor_centavos) VALUES (?, ?)",
