@@ -38,6 +38,7 @@ Permitir que Marli registre quando um cliente paga todo ou parte do fiado, abate
 - **CA-03:** Dado que João tem saldo devedor de R$ 42,50, quando Marli tenta registrar um pagamento de R$ 50,00, então o sistema exibe "O pagamento não pode ser maior que o saldo devedor" e o saldo continua R$ 42,50.
 - **CA-04:** Dado que Marli preenche o valor R$ 0,00, quando tenta salvar o pagamento, então o sistema exibe "Informe um valor maior que zero" e o saldo continua o mesmo.
 - **CA-05:** Dado que Marli registrou um pagamento de R$ 20,00 para João às 10h15 de 24/10/2026, quando abre o histórico de João, então aparece uma linha com "Pagamento", a data 24/10/2026, a hora 10:15 e o valor R$ 20,00.
+- **CA-06:** Dado que João tem saldo devedor de R$ 42,50, quando Marli abre a tela de João, então a tela exibe um formulário de pagamento com campo Valor e botão 'Registrar pagamento'.
 
 ## 7. Restrições
 - Interface em português do Brasil.
@@ -64,6 +65,7 @@ Permitir que Marli registre quando um cliente paga todo ou parte do fiado, abate
 - **D-03 — Histórico único:** compras e pagamentos ficam na mesma lista, identificados pelo tipo, para servir de prova na cobrança.
 - **D-04 — Mensagens de formato:** reaproveitam as da spec 001 (D-09) para o usuário ver sempre o mesmo texto.
 - **D-05 — Saldo redefinido:** a RN-05 da spec 001 passa a valer como compras − pagamentos (registrado como D-12 na spec 001).
+- **D-06 — CA-02 coberto pelo CA-01:** CA-02 é caso de borda do CA-01 (quitação total); a implementação do CA-01 já o cobria.
 
 **Se o código fosse apagado agora, esta spec seria suficiente para reconstruí-lo?**
 Sim para registro de pagamento, saldo e histórico. Não define o layout das telas, que fica a critério da equipe.
