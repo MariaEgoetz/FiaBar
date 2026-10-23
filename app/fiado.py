@@ -130,7 +130,12 @@ def registrar_fiado(cliente_id):
 @bp.post("/clientes/<int:cliente_id>/pagamentos")
 def registrar_pagamento(cliente_id):
     buscar_cliente(cliente_id)
-    valor = Decimal(request.form["valor"].replace(".", "").replace(",", "."))
+    try:
+        valor = Decimal(request.form["valor"].replace(".", "").replace(",", "."))
+    except InvalidOperation:
+        return mostrar_cliente(cliente_id, "Informe um valor numérico, ex.: 12,50")
+    if valor.as_tuple().exponent < -2:
+        return mostrar_cliente(cliente_id, "Use no máximo duas casas decimais")
     if valor <= 0:
         return mostrar_cliente(cliente_id, "Informe um valor maior que zero")
     db = get_db()
